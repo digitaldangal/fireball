@@ -1,7 +1,6 @@
-# Flutter SQFLITE MVP LOGIN APP
-
-A Login Page Flutter App with SQFLITE (SQLITE) and MVP implementation. Written in dart using Flutter SDK.
-Please don't forget to give stars so that i keep updating the project. Thanks
+# Flutter structura de project fireball the TeamUpLabGroups
+.
+A Login Page Flutter App fireball with SQFLITE (SQLITE) and MVP implementation. Written in dart using Flutter SDK. Thanks
 
 # Getting Started
 
