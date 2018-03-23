@@ -3,6 +3,13 @@ import 'package:Fireball/data/database_helper.dart';
 import 'package:Fireball/models/user.dart';
 import 'package:Fireball/pages/login/login_presenter.dart';
 
+const Color _kAppBackgroundColor = const Color(0xFF353662);
+const Duration _kScrollDuration = const Duration(milliseconds: 400);
+const Curve _kScrollCurve = Curves.fastOutSlowIn;
+
+const double _kAppBarMinHeight = 90.0;
+const double _kAppBarMidHeight = 256.0;
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => new _LoginPageState();
@@ -51,10 +58,12 @@ class _LoginPageState extends State<LoginPage> implements LoginPageContract {
     var loginForm = new Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        new Text(
-          "Fireball",
-          textScaleFactor: 2.0,
-        ),
+        new Image(
+          image: new AssetImage("assets/img/fondo.jpg"),
+          fit: BoxFit.cover,
+          //color: Colors.black87,
+          colorBlendMode: BlendMode.darken,
+        ), //Imagen
         new Form(
           key: formKey,
           child: new Column(
@@ -71,18 +80,18 @@ class _LoginPageState extends State<LoginPage> implements LoginPageContract {
                 child: new TextFormField(
                   onSaved: (val) => _password = val,
                   decoration: new InputDecoration(labelText: "Password"),
-                ),
-              )
-            ],
-          ),
-        ),
+                ),//TextFormField
+              )//Padding
+            ],//<widget>
+          ),//Column
+        ),//Form
         loginBtn
       ],
     );
 
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Login Page"),
+        title: new Text("Fireball"),
       ),
       key: scaffoldKey,
       body: new Container(

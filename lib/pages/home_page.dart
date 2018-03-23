@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:Fireball/pages/new_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => new _HomePageState();
+}
+
+class _HomePageState extends  State<HomePage> {
+  String currentProfilePic = "https://i2.linio.com/p/97c2dc437a41110add60342bc922242d-product.jpg";
+  String otherProfilePic = "https://yt3.ggpht.com/-2_2skU9e2Cw/AAAAAAAAAAI/AAAAAAAAAAA/6NpH9G8NWf4/s900-c-k-no-mo-rj-c0xffffff/photo.jpg";
+
+  void switchAccounts() {
+    String picBackup = currentProfilePic;
+    this.setState(() {
+      currentProfilePic = otherProfilePic;
+      otherProfilePic = picBackup;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -12,21 +28,42 @@ class HomePage extends StatelessWidget {
         child: new ListView(
           children: <Widget>[
 
-            //UserAccountsDrawerHeader
             new UserAccountsDrawerHeader(
-              accountName: new Text("Usuario Name"),
-              accountEmail: new Text("Scores: 5"),
-              currentAccountPicture: new CircleAvatar(
-                backgroundColor: Theme.of(context).platform == TargetPlatform.iOS ? Colors.grey : Colors.deepPurple,
-                child: new Text("J"),
-              ),//CircleAvatar
-              otherAccountsPictures: <Widget>[
-                new CircleAvatar(
-                  backgroundColor: Theme.of(context).platform == TargetPlatform.iOS ?  Colors.grey : Colors.deepPurple,
-                  child: new Text("L"),
+              accountEmail: new Text(
+               "jsloravargas@gmail.com",
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: new TextStyle(fontWeight:
+                FontWeight.bold, color: Colors.white),
+               ), //new Text("jsloravargas@gmail.com"),
+              accountName:  new Text(
+                "JoseLora",
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: new TextStyle(fontWeight:
+                FontWeight.bold, color: Colors.white),
+              ), // new Text("JoseLora"),
+              currentAccountPicture: new GestureDetector(
+                child: new CircleAvatar(
+                  backgroundImage: new NetworkImage(currentProfilePic),
                 ),
-              ],//OtherCircleAvatar
-            ),//UserAccountsDrawerHeader
+                onTap: () => print("This is your current account."),
+              ),
+              otherAccountsPictures: <Widget>[
+                new GestureDetector(
+                  child: new CircleAvatar(
+                    backgroundImage: new NetworkImage(otherProfilePic),
+                  ),
+                  onTap: () => switchAccounts(),
+                ),
+              ],
+              decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                      image: new NetworkImage("https://i1.wp.com/cdn.akamai.steamstatic.com/steam/apps/586950/ss_6165fb0236ecbf575d0383facd55075cc96e308c.600x338.jpg?resize=600%2C337"),
+                      fit: BoxFit.fill
+                  )
+              ),
+            ),
 
             //ListTile menu
             new ListTile(
