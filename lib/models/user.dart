@@ -19,3 +19,4 @@ class User {
     return map;
   }
 }
+

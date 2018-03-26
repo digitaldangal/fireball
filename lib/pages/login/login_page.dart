@@ -1,50 +1,55 @@
+import 'package:Fireball/utils/auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:Fireball/data/database_helper.dart';
 import 'package:Fireball/models/user.dart';
 import 'package:Fireball/pages/login/login_presenter.dart';
 
-const Color _kAppBackgroundColor = const Color(0xFF353662);
-const Duration _kScrollDuration = const Duration(milliseconds: 400);
-const Curve _kScrollCurve = Curves.fastOutSlowIn;
-
-const double _kAppBarMinHeight = 90.0;
-const double _kAppBarMidHeight = 256.0;
-
 class LoginPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => new _LoginPageState();
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return new LoginPageState();
+  }
 }
 
-class _LoginPageState extends State<LoginPage> implements LoginPageContract {
+class LoginPageState extends State<LoginPage>
+    implements LoginScreenContract, AuthStateListener {
   BuildContext _ctx;
+
   bool _isLoading = false;
   final formKey = new GlobalKey<FormState>();
   final scaffoldKey = new GlobalKey<ScaffoldState>();
+  String _password, _username;
 
-  String _username, _password;
+  LoginScreenPresenter _presenter;
 
-  LoginPagePresenter _presenter;
-
-  _LoginPageState() {
-    _presenter = new LoginPagePresenter(this);
+  LoginPageState() {
+    _presenter = new LoginScreenPresenter(this);
+    var authStateProvider = new AuthStateProvider();
+    authStateProvider.subscribe(this);
   }
 
   void _submit() {
     final form = formKey.currentState;
 
     if (form.validate()) {
-      setState(() {
-        _isLoading = true;
-        form.save();
-        _presenter.doLogin(_username, _password);
-      });
+      setState(() => _isLoading = true);
+      form.save();
+      _presenter.doLogin(_username, _password);
     }
   }
 
   void _showSnackBar(String text) {
-    scaffoldKey.currentState.showSnackBar(new SnackBar(
-      content: new Text(text),
-    ));
+    scaffoldKey.currentState
+        .showSnackBar(new SnackBar(content: new Text(text)));
+  }
+
+  @override
+  onAuthStateChanged(AuthState state) {
+
+    if(state == AuthState.LOGGED_IN)
+      Navigator.of(_ctx).pushReplacementNamed("/home");
   }
 
   @override
@@ -52,74 +57,86 @@ class _LoginPageState extends State<LoginPage> implements LoginPageContract {
     _ctx = context;
     var loginBtn = new RaisedButton(
       onPressed: _submit,
-      child: new Text("Login"),
+      child: new Text("LOGIN"),
       color: Colors.amber,
     );
     var loginForm = new Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        new Image(
-          image: new AssetImage("assets/img/fondo.jpg"),
-          fit: BoxFit.cover,
-          //color: Colors.black87,
-          colorBlendMode: BlendMode.darken,
-        ), //Imagen
+        new Text(
+          "Fireball",
+          textScaleFactor: 2.0,
+        ),
         new Form(
           key: formKey,
           child: new Column(
             children: <Widget>[
               new Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(8.0),
                 child: new TextFormField(
                   onSaved: (val) => _username = val,
+                  validator: (val) {
+                    return val.length < 10
+                        ? "Username must have atleast 10 chars"
+                        : null;
+                  },
                   decoration: new InputDecoration(labelText: "Username"),
                 ),
               ),
               new Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(8.0),
                 child: new TextFormField(
                   onSaved: (val) => _password = val,
                   decoration: new InputDecoration(labelText: "Password"),
-                ),//TextFormField
-              )//Padding
-            ],//<widget>
-          ),//Column
-        ),//Form
-        loginBtn
+                ),
+              ),
+            ],
+          ),
+        ),
+        _isLoading ? new CircularProgressIndicator() : loginBtn
       ],
+      crossAxisAlignment: CrossAxisAlignment.center,
     );
 
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Fireball"),
-      ),
+      appBar: null,
       key: scaffoldKey,
       body: new Container(
+        decoration: new BoxDecoration(
+          image: new DecorationImage(
+              image: new AssetImage("assets/img/fondo.jpg"),
+              fit: BoxFit.cover),
+        ),
         child: new Center(
-          child: loginForm,
+          child: new ClipRect(
+            child: new BackdropFilter(
+              filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+              child: new Container(
+                child: loginForm,
+                height: 300.0,
+                width: 300.0,
+                decoration: new BoxDecoration(
+                    color: Colors.grey.shade200.withOpacity(0.5)),
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
   @override
-  void onLoginError(String error) {
-    // TODO: implement onLoginError
-    _showSnackBar(error);
-    setState(() {
-      _isLoading = false;
-    });
+  void onLoginError(String errorTxt) {
+    _showSnackBar(errorTxt);
+    setState(() => _isLoading = false);
   }
 
   @override
   void onLoginSuccess(User user) async {
-    // TODO: implement onLoginSuccess
     _showSnackBar(user.toString());
-    setState(() {
-      _isLoading = false;
-    });
+    setState(() => _isLoading = false);
     var db = new DatabaseHelper();
     await db.saveUser(user);
-    Navigator.of(context).pushNamed("/home");
+    var authStateProvider = new AuthStateProvider();
+    authStateProvider.notify(AuthState.LOGGED_IN);
   }
 }

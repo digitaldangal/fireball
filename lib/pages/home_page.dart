@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:Fireball/pages/new_page.dart';
 
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => new _HomePageState();
