@@ -1,9 +1,17 @@
+import 'dart:async';
+
+import 'package:Fireball/pages/home_page.dart';
 import 'package:Fireball/utils/auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:Fireball/data/database_helper.dart';
 import 'package:Fireball/models/user.dart';
 import 'package:Fireball/pages/login/login_presenter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final GoogleSignIn _googleSignIn = new GoogleSignIn();
 
 class LoginPage extends StatefulWidget {
   @override
@@ -11,6 +19,26 @@ class LoginPage extends StatefulWidget {
     // TODO: implement createState
     return new LoginPageState();
   }
+}
+
+Future<String> _testSignInWithGoogle() async {
+  final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+  final GoogleSignInAuthentication googleAuth =
+  await googleUser.authentication;
+  final FirebaseUser user = await _auth.signInWithGoogle(
+    accessToken: googleAuth.accessToken,
+    idToken: googleAuth.idToken,
+  );
+  assert(user.email != null);
+  assert(user.displayName != null);
+  assert(!user.isAnonymous);
+  assert(await user.getIdToken() != null);
+
+  final FirebaseUser currentUser = await _auth.currentUser();
+  assert(user.uid == currentUser.uid);
+
+  print("This user is signed in $user");
+  return 'signInWithGoogle succeeded: $user';
 }
 
 class LoginPageState extends State<LoginPage>
@@ -28,6 +56,12 @@ class LoginPageState extends State<LoginPage>
     _presenter = new LoginScreenPresenter(this);
     var authStateProvider = new AuthStateProvider();
     authStateProvider.subscribe(this);
+  }
+
+  void _incrementCounter() {
+    setState(() {
+    });
+    _testSignInWithGoogle();
   }
 
   void _submit() {
@@ -121,6 +155,14 @@ class LoginPageState extends State<LoginPage>
           ),
         ),
       ),
+
+       floatingActionButton:  new RaisedButton(
+         child: const Text('Connect with Google'),
+         color: Theme.of(context).accentColor,
+         elevation: 4.0,
+         splashColor: Colors.deepOrange,
+         onPressed: _incrementCounter,
+       ),
     );
   }
 

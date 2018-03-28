@@ -1,3 +1,4 @@
+import 'package:Fireball/pages/about_page.dart';
 import 'package:flutter/material.dart';
 import 'package:Fireball/pages/new_page.dart';
 
@@ -98,13 +99,21 @@ class _HomePageState extends  State<HomePage> {
             ), //ListTitle 3
 
             new ListTile(
+                title: new Text("About app"),
+                trailing: new Icon(Icons.more),
+                onTap: () {
+                 new AboutPage();
+                }//LostTile
+            ), //ListTitle 4
+
+            new ListTile(
                 title: new Text("Sing Out"),
                 trailing: new Icon(Icons.close),
                 onTap: () {
                   Navigator.of(context).pop();
                   //Navigator.of(context).pop();
                 }//LostTile
-            ), //ListTitle 4
+            ), //ListTitle 5
 
           ],//Widget []
         ),//listview

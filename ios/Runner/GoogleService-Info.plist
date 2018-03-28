@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>35850342487-28hn0kbbg80icgodea4nehvjhcsos2nf.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.35850342487-28hn0kbbg80icgodea4nehvjhcsos2nf</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCbZ4IkfBuoK_HRR7tNhTF62h3JFSiMMVg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>35850342487</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.fireballflite</string>
+	<key>PROJECT_ID</key>
+	<string>fireball-fa663</string>
+	<key>STORAGE_BUCKET</key>
+	<string>fireball-fa663.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:35850342487:ios:ab7e91595e559c04</string>
+	<key>DATABASE_URL</key>
+	<string>https://fireball-fa663.firebaseio.com</string>
+</dict>
+</plist>

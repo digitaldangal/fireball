@@ -13,7 +13,7 @@ class AuthStateProvider {
   factory AuthStateProvider() => _instance;
   AuthStateProvider.internal() {
     _subscribers = new List<AuthStateListener>();
-    initState();
+    //initState();
   }
 
   void initState() async {
