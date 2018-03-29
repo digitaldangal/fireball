@@ -14,9 +14,7 @@ class _AboutPageState extends State<AboutPage> {
       appBar: new AppBar(
         title: new Text('About Us'),
       ),
-      body: new Center(
-          child: new Text('You are in the about page!')
-      ),
+      body: new Center(child: new Text('You are in the about page!')),
     );
   }
 }

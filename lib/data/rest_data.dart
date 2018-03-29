@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:Fireball/models/user.dart';
 import 'package:Fireball/utils/network_util.dart';
 
@@ -15,7 +16,7 @@ class RestData {
       "password": password
     }).then((dynamic res) {
       print(res.toString());
-      if(res["error"]) throw new Exception(res["error_msg"]);
+      if (res["error"]) throw new Exception(res["error_msg"]);
       return new User.map(res["user"]);
     });
   }

@@ -13,6 +13,7 @@ dependencies:
   path_provider: ^0.4.0
   google_sign_in: "^3.0.0"
   firebase_auth: "^0.5.2"
+  flutter_webview_plugin: ">=0.0.5 <0.1.0"
 
 
 dev_dependencies:
@@ -36,6 +37,7 @@ flutter:
   #  - images/a_dot_ham.jpeg
   assets:
     - assets/img/fondo.jpg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

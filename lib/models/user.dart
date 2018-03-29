@@ -10,6 +10,7 @@ class User {
   }
 
   String get username => _username;
+
   String get password => _password;
 
   Map<String, dynamic> toMap() {
@@ -19,4 +20,3 @@ class User {
     return map;
   }
 }
-
