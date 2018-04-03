@@ -23,14 +23,13 @@ class S extends WidgetsLocalizations {
 
   @override
   TextDirection get textDirection => TextDirection.ltr;
+
 }
 
 class en extends S {
   en(Locale locale) : super(locale);
 }
-
-class GeneratedLocalizationsDelegate
-    extends LocalizationsDelegate<WidgetsLocalizations> {
+class GeneratedLocalizationsDelegate extends LocalizationsDelegate<WidgetsLocalizations> {
   const GeneratedLocalizationsDelegate();
 
   List<Locale> get supportedLocales {

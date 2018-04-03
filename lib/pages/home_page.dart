@@ -1,25 +1,26 @@
 import 'package:Fireball/pages/about_page.dart';
+import 'package:Fireball/pages/friends/friends_page.dart';
 import 'package:Fireball/pages/new_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
+  final FirebaseUser user;
+
+  HomePage(this.user);
+
   @override
-  _HomePageState createState() => new _HomePageState();
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return new _HomePageState(user);
+  }
+//_HomePageState createState() => new _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  String currentProfilePic =
-      "https://i2.linio.com/p/97c2dc437a41110add60342bc922242d-product.jpg";
-  String otherProfilePic =
-      "https://yt3.ggpht.com/-2_2skU9e2Cw/AAAAAAAAAAI/AAAAAAAAAAA/6NpH9G8NWf4/s900-c-k-no-mo-rj-c0xffffff/photo.jpg";
+  final FirebaseUser user;
 
-  void switchAccounts() {
-    String picBackup = currentProfilePic;
-    this.setState(() {
-      currentProfilePic = otherProfilePic;
-      otherProfilePic = picBackup;
-    });
-  }
+  _HomePageState(this.user);
 
   @override
   Widget build(BuildContext context) {
@@ -32,35 +33,25 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             new UserAccountsDrawerHeader(
               accountEmail: new Text(
-                "jsloravargas@gmail.com",
+                user.email,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 style: new TextStyle(
                     fontWeight: FontWeight.bold, color: Colors.white),
               ),
-              //new Text("jsloravargas@gmail.com"),
               accountName: new Text(
-                "JoseLora",
+                user.displayName,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 style: new TextStyle(
                     fontWeight: FontWeight.bold, color: Colors.white),
               ),
-              // new Text("JoseLora"),
               currentAccountPicture: new GestureDetector(
                 child: new CircleAvatar(
-                  backgroundImage: new NetworkImage(currentProfilePic),
+                  backgroundImage: new NetworkImage(user.photoUrl),
                 ),
                 onTap: () => print("This is your current account."),
               ),
-              otherAccountsPictures: <Widget>[
-                new GestureDetector(
-                  child: new CircleAvatar(
-                    backgroundImage: new NetworkImage(otherProfilePic),
-                  ),
-                  onTap: () => switchAccounts(),
-                ),
-              ],
               decoration: new BoxDecoration(
                   image: new DecorationImage(
                       image: new NetworkImage(
@@ -86,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          new NewPage("Friends"))); //MaterialpageRoute Scrape
+                          new FriendsPage(user))); //MaterialpageRoute Scrape
                 }), //ListTitle 2
 
             new ListTile(

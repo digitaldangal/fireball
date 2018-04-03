@@ -3,10 +3,12 @@ import 'dart:ui';
 
 import 'package:Fireball/data/database_helper.dart';
 import 'package:Fireball/models/user.dart';
+import 'package:Fireball/pages/home_page.dart';
 import 'package:Fireball/pages/login/login_presenter.dart';
 import 'package:Fireball/utils/auth.dart';
 import 'package:Fireball/utils/instagram.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -15,30 +17,12 @@ final GoogleSignIn _googleSignIn = new GoogleSignIn();
 
 class LoginPage extends StatefulWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return new LoginPageState(_scaffoldKey);
   }
-}
-
-Future<String> _testSignInWithGoogle() async {
-  final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-  final FirebaseUser user = await _auth.signInWithGoogle(
-    accessToken: googleAuth.accessToken,
-    idToken: googleAuth.idToken,
-  );
-  assert(user.email != null);
-  assert(user.displayName != null);
-  assert(!user.isAnonymous);
-  assert(await user.getIdToken() != null);
-
-  final FirebaseUser currentUser = await _auth.currentUser();
-  assert(user.uid == currentUser.uid);
-
-  print("This user is signed in $user");
-  return 'signInWithGoogle succeeded: $user';
 }
 
 class LoginPageState extends State<LoginPage>
@@ -53,15 +37,51 @@ class LoginPageState extends State<LoginPage>
 
   LoginScreenPresenter _presenter;
 
+  Future<String> _testSignInWithGoogle() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final FirebaseUser user = await _auth.signInWithGoogle(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    if(user != null) {
+      _auth.onAuthStateChanged.firstWhere((user) => user != null).then((user) {
+        //Navigator.of(context).pushReplacementNamed('/home');
+
+        Navigator.of(context).pop();
+        Navigator.of(context).push(new MaterialPageRoute(
+            builder: (BuildContext context) =>
+            new HomePage(user)));
+
+      });
+    }
+    // Give the navigation animations, etc, some time to finish
+    new Future.delayed(new Duration(seconds: 1)).then((_) => _testSignInWithGoogle());
+    assert(user.email != null);
+    assert(user.displayName != null);
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+    BuildContext x;
+    final FirebaseUser currentUser = await _auth.currentUser();
+    assert(user.uid == currentUser.uid);
+
+
+    print("This user is signed in $user");
+    return 'signInWithGoogle succeeded: $user';
+  }
+
   LoginPageState(GlobalKey<ScaffoldState> skey) {
     _presenter = new LoginScreenPresenter(this);
     var authStateProvider = new AuthStateProvider();
     authStateProvider.subscribe(this);
-   _scaffoldKey = skey;
+    _scaffoldKey = skey;
   }
 
   void _incrementCounter() {
-    setState(() {});
+    setState(() {
+      _isLoading = true;
+    });
     _testSignInWithGoogle();
   }
 
@@ -100,11 +120,6 @@ class LoginPageState extends State<LoginPage>
         .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
-  _LoginScreenState(GlobalKey<ScaffoldState> skey) {
-    _presenter = new LoginScreenPresenter(this);
-    _scaffoldKey = skey;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -131,12 +146,8 @@ class LoginPageState extends State<LoginPage>
   @override
   Widget build(BuildContext context) {
     _ctx = context;
-    bool _isFavorited = true;
-
     var loginBtn = new RaisedButton(
       child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           //new Image.network('https://flutter.io/images/favicon.png'),
           const Text("LOGIN"),
@@ -150,8 +161,6 @@ class LoginPageState extends State<LoginPage>
 
     var loginBtnGoogle = new RaisedButton(
       child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           //new Image.network('https://flutter.io/images/favicon.png'),
           const Text("Connect with Google"),
@@ -165,8 +174,6 @@ class LoginPageState extends State<LoginPage>
 
     var loginBtnInstagram = new RaisedButton(
       child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           //new Image.network('https://flutter.io/images/favicon.png'),
           const Text("Connect with Instagram"),
@@ -242,13 +249,6 @@ class LoginPageState extends State<LoginPage>
       ),
     );
   }
-
-/*
-  @override
-  void onLoginError(String errorTxt) {
-    _showSnackBar(errorTxt);
-    setState(() => _isLoading = false);
-  } */
 
   @override
   void onLoginSuccess(User user) async {

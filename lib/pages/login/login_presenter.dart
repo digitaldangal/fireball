@@ -28,6 +28,7 @@ class LoginScreenPresenter {
     insta.getToken(constants.APP_ID, constants.APP_SECRET).then((token) {
       if (token != null) {
         _view.onLoginScuccess(token);
+
       } else {
         _view.onLoginError('Error');
       }
